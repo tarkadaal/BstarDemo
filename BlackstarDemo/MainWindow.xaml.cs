@@ -25,8 +25,30 @@ namespace BlackstarDemo
         {
             InitializeComponent();
 
+            PlayNotes();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            PlayNotes();
+        }
+
+        private static void PlayNotes()
+        {
             string filePath = @"C:\Users\DanAdmin\Desktop\test2.wav";
-            WaveGenerator wave = new WaveGenerator(WaveExampleType.ExampleSineWave, Notes.G4, 2);
+
+            var notes = new List<Note> { 
+                new Note{Frequency = Pitches.C4, Duration = TimeSpan.FromSeconds(.5)},
+                new Note{Frequency = Pitches.D4, Duration = TimeSpan.FromSeconds(.5)},
+                new Note{Frequency = Pitches.E4, Duration = TimeSpan.FromSeconds(.5)},
+                new Note{Frequency = Pitches.F4, Duration = TimeSpan.FromSeconds(.5)},
+                new Note{Frequency = Pitches.G4, Duration = TimeSpan.FromSeconds(.5)},
+                new Note{Frequency = Pitches.A4, Duration = TimeSpan.FromSeconds(.5)},
+                new Note{Frequency = Pitches.B4, Duration = TimeSpan.FromSeconds(.5)},
+                new Note{Frequency = Pitches.C5, Duration = TimeSpan.FromSeconds(.5)}
+            };
+
+            WaveGenerator wave = new WaveGenerator(notes);
             wave.Save(filePath);
 
             SoundPlayer player = new SoundPlayer(filePath);

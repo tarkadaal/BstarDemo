@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BlackstarDemo.WaveFun
 {
-    public static class Notes
+    public static class Pitches
     {
         public const float A3 = 220.0f;
         public const float Bb3 = 233.08f;
@@ -20,5 +20,8 @@ namespace BlackstarDemo.WaveFun
         public const float G4 = 392.0f;
         public const float Ab4 = 415.30f;
         public const float A4 = 440.0f;
+        public const float Bb4 = 466.16f;
+        public const float B4 = 493.88f;
+        public const float C5 = 523.25f;
     }
 }

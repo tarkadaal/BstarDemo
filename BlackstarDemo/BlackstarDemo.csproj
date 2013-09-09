@@ -55,7 +55,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="WaveFun\Notes.cs" />
+    <Compile Include="WaveFun\Note.cs" />
+    <Compile Include="WaveFun\Pitches.cs" />
     <Compile Include="WaveFun\WaveGenerator.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

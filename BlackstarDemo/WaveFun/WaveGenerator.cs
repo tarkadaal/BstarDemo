@@ -10,6 +10,8 @@
 
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BlackstarDemo.WaveFun
 {
@@ -36,11 +38,11 @@ namespace BlackstarDemo.WaveFun
         /// </summary>
         /// <param name="type">The type of wave to generate</param>
         public WaveGenerator(WaveExampleType type, double freq, uint seconds)
-        {          
+        {
             // Init chunks
             header = new WaveHeader();
             format = new WaveFormatChunk();
-            data = new WaveDataChunk();            
+            data = new WaveDataChunk();
 
             // Fill the data array with sample data
             switch (type)
@@ -49,7 +51,7 @@ namespace BlackstarDemo.WaveFun
 
                     // Number of samples = sample rate * channels * bytes per sample
                     uint numSamples = format.dwSamplesPerSec * format.wChannels * seconds;
-                    
+
                     // Initialize the 16-bit array
                     data.shortArray = new short[numSamples];
 
@@ -65,15 +67,59 @@ namespace BlackstarDemo.WaveFun
                         for (int channel = 0; channel < format.wChannels; channel++)
                         {
                             data.shortArray[i + channel] = Convert.ToInt16(amplitude * Math.Sin(t * i));
-                        }                        
+                        }
                     }
 
                     // Calculate data chunk size in bytes
                     data.dwChunkSize = (uint)(data.shortArray.Length * (format.wBitsPerSample / 8));
 
                     break;
-            }          
+            }
         }
+
+        public WaveGenerator(IEnumerable<Note> notes)
+        {
+            // Init chunks
+            header = new WaveHeader();
+            format = new WaveFormatChunk();
+            data = new WaveDataChunk();
+
+            var milliseconds = notes.Select((x) => x.Duration.TotalMilliseconds).Sum();
+            var seconds = (uint)(milliseconds / 1000);
+
+            // Number of samples = sample rate * channels * bytes per sample
+            uint numSamples = format.dwSamplesPerSec * format.wChannels * seconds;
+
+            // Initialize the 16-bit array
+            data.shortArray = new short[numSamples];
+
+            int amplitude = 32760;  // Max amplitude for 16-bit audio
+
+            var sampleCount = 0;
+
+            foreach (var n in notes)
+            {
+                // The "angle" used in the function, adjusted for the number of channels and sample rate.
+                // This value is like the period of the wave.
+                double t = (Math.PI * 2 * n.Frequency) / (format.dwSamplesPerSec * format.wChannels);
+
+                var samplesThisNote = format.dwSamplesPerSec * format.wChannels * n.Duration.TotalSeconds;
+
+                for (uint i = 0; i < samplesThisNote - 1; i++)
+                {
+                    // Fill with a simple sine wave at max amplitude
+                    for (int channel = 0; channel < format.wChannels; channel++)
+                    {
+                        data.shortArray[sampleCount + i + channel] = Convert.ToInt16(amplitude * Math.Sin(t * i));
+                    }
+                }
+                sampleCount += (int)samplesThisNote;
+            }
+            // Calculate data chunk size in bytes
+            data.dwChunkSize = (uint)(data.shortArray.Length * (format.wBitsPerSample / 8));
+
+        }
+
 
         /// <summary>
         /// Saves the current wave data to the specified file.
@@ -82,7 +128,7 @@ namespace BlackstarDemo.WaveFun
         public void Save(string filePath)
         {
             // Create a file (it always overwrites)
-            FileStream fileStream = new FileStream(filePath, FileMode.Create);                                              
+            FileStream fileStream = new FileStream(filePath, FileMode.Create);
 
             // Use BinaryWriter to write the bytes to the file
             BinaryWriter writer = new BinaryWriter(fileStream);
@@ -113,10 +159,10 @@ namespace BlackstarDemo.WaveFun
             writer.Seek(4, SeekOrigin.Begin);
             uint filesize = (uint)writer.BaseStream.Length;
             writer.Write(filesize - 8);
-            
+
             // Clean up
             writer.Close();
-            fileStream.Close();            
+            fileStream.Close();
         }
     }
 }
