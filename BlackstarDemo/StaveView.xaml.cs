@@ -25,41 +25,116 @@ namespace BlackstarDemo
             InitializeComponent();
         }
 
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            _staveLines = new List<Line>();
+            for (var i = 0; i < 5; i++)
+            {
+                var l = new Line
+                {
+                    X1 = 50,
+                    X2 = ActualWidth - 50,
+                    Y1 = 40 + (i * _staveLineSeparationDistance),
+                    Y2 = 40 + (i * _staveLineSeparationDistance)
+                };
+                _staveLines.Add(l);
+                MainCanvas.Children.Add(l);
+            }
+        }
+
         private void UserControl_PreviewDragEnter(object sender, DragEventArgs e)
         {
-            _isDragging = true;
             _mousePosition = e.GetPosition(MainCanvas);
-            RemoveDragLine();
-            _dragLine = new Line
+            //RemoveDragLine();
+            //CreateDragLine();
+            RemoveFloatingNote();
+            CreateFloatingNote();
+            e.Handled = true;
+        }
+
+        private void CreateDragLine()
+        {
+            _dragLineHorizontal = new Line
             {
                 X1 = 0,
                 X2 = MainCanvas.ActualWidth,
                 Y1 = _mousePosition.Y,
                 Y2 = _mousePosition.Y
             };
-            MainCanvas.Children.Add(_dragLine);
-            e.Handled = true;
+            MainCanvas.Children.Add(_dragLineHorizontal);
         }
 
         private void RemoveDragLine()
         {
-            if (_dragLine != null)
+            if (_dragLineHorizontal != null)
             {
-                MainCanvas.Children.Remove(_dragLine);
+                MainCanvas.Children.Remove(_dragLineHorizontal);
             }
+        }
+
+        private void RemoveFloatingNote()
+        {
+            if (_tempNote != null)
+            {
+                MainCanvas.Children.Remove(_tempNote);
+            }
+        }
+
+        private void CreateFloatingNote()
+        {
+            var targetY = GetYForNearestStaveLine();
+            _tempNote = new Image();
+            
+           var src = new BitmapImage();
+            src.BeginInit();
+            src.UriSource = new Uri(@"pack://application:,,,/Images/quarterNote.png");
+            src.CacheOption = BitmapCacheOption.OnLoad;
+            src.EndInit();
+            _tempNote.Source = src;
+            _tempNote.Stretch = Stretch.Uniform;
+            MainCanvas.Children.Add(_tempNote);
+            Canvas.SetLeft(_tempNote, _mousePosition.X - (src.PixelWidth /2));
+            Canvas.SetTop(_tempNote, targetY - (src.PixelHeight / 2));
+        }
+
+        private double GetYForNearestStaveLine()
+        {
+            if (_mousePosition.Y <= _staveLines[0].Y1)
+            {
+                return _staveLines[0].Y1;
+            } 
+            
+            if (_mousePosition.Y >= _staveLines[4].Y1)
+            {
+                return _staveLines[4].Y1;
+            }
+
+            var result = 0.0;
+            for (var i = 0; i < 5; i++)
+            {
+                if (_mousePosition.Y >= _staveLines[i].Y1 - (_staveLineSeparationDistance / 2) &&
+                    _mousePosition.Y < _staveLines[i].Y1 + (_staveLineSeparationDistance / 2))
+                {
+                    result = _staveLines[i].Y1;
+                }
+            }
+            return result;
         }
 
         private void UserControl_Drop(object sender, DragEventArgs e)
         {
-            _isDragging = false;
-            RemoveDragLine();
-            Background = Brushes.Pink;
+            _tempNote = null;
             e.Handled = true;
         }
 
-        private Line _dragLine;
+        private Line _dragLineHorizontal;
         private Point _mousePosition;
-        private bool _isDragging;
+        private List<Line> _staveLines;
+        private int _staveLineSeparationDistance = 26;
+        private Image _tempNote;
+        
+
 
 
 

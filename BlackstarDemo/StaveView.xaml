@@ -8,6 +8,7 @@
              PreviewDragEnter="UserControl_PreviewDragEnter"
              DragEnter="UserControl_PreviewDragEnter"
              Drop="UserControl_Drop"
+             Loaded="UserControl_Loaded"
              AllowDrop="True"
              Background="White">
     <UserControl.Resources>
@@ -18,31 +19,7 @@
     </UserControl.Resources>
     <Grid>
         <Canvas Name="MainCanvas">
-            <Line
-                X1="0" Y1="0"
-                X2="400" Y2="0"
-                Canvas.Left="50"
-                Canvas.Top="40"/>
-            <Line
-                X1="0" Y1="0"
-                X2="400" Y2="0"
-                Canvas.Left="50"
-                Canvas.Top="65"/>
-            <Line
-                X1="0" Y1="0"
-                X2="400" Y2="0"
-                Canvas.Left="50"
-                Canvas.Top="90"/>
-            <Line
-                X1="0" Y1="0"
-                X2="400" Y2="0"
-                Canvas.Left="50"
-                Canvas.Top="115"/>
-            <Line
-                X1="0" Y1="0"
-                X2="400" Y2="0"
-                Canvas.Left="50"
-                Canvas.Top="140"/>
+
         </Canvas>
     </Grid>
 </UserControl>

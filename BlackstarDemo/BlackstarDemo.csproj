@@ -107,8 +107,12 @@
     <Resource Include="todo.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\quarterNote.png" />
-    <Resource Include="Images\quarterRest.png" />
+    <Resource Include="Images\quarterNote.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\quarterRest.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
