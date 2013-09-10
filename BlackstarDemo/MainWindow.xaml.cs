@@ -33,8 +33,6 @@ namespace BlackstarDemo
 
         private static void PlayNotes()
         {
-            string filePath = @"C:\Users\DanAdmin\Desktop\test.wav";
-
             var notes = new List<Note> { 
                 new Note{Frequency = Pitches.C4, Duration = TimeSpan.FromSeconds(.5)},
                 new Note{Frequency = Pitches.D4, Duration = TimeSpan.FromSeconds(.5)},
@@ -46,17 +44,12 @@ namespace BlackstarDemo
                 new Note{Frequency = Pitches.C5, Duration = TimeSpan.FromSeconds(.5)}
             };
 
-            WaveGenerator wave = new WaveGenerator(notes);
-            wave.Save(filePath);
-
-            SoundPlayer player = new SoundPlayer(filePath);
-            player.Play();
+            PlayNotes(notes);
         }
 
         private void Image_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             _startPoint = e.GetPosition(null);
-
         }
 
         private void Image_PreviewMouseMove(object sender, MouseEventArgs e)
@@ -69,9 +62,8 @@ namespace BlackstarDemo
                     Math.Abs(position.Y - _startPoint.Y) > SystemParameters.MinimumVerticalDragDistance)
                 {
                     StartDrag((DependencyObject)sender, e);
-
                 }
-            }   
+            }
         }
 
         private void StartDrag(DependencyObject sender, MouseEventArgs e)
@@ -82,7 +74,25 @@ namespace BlackstarDemo
             _isDragging = false;
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            PlayNotes(Stave.Notes);
+        }
+
+        private static void PlayNotes(List<Note> notes)
+        {
+            string filePath = @"C:\Users\DanAdmin\Desktop\test.wav";
+
+            WaveGenerator wave = new WaveGenerator(notes);
+            wave.Save(filePath);
+
+            SoundPlayer player = new SoundPlayer(filePath);
+            player.Play();
+        }
+
+
         private bool _isDragging;
         private Point _startPoint;
     }
+
 }

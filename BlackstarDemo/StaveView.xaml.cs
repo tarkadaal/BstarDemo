@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Diagnostics;
+using BlackstarDemo.WaveFun;
 
 namespace BlackstarDemo
 {
@@ -23,6 +24,7 @@ namespace BlackstarDemo
         public StaveView()
         {
             InitializeComponent();
+            Notes = new List<Note>();
         }
 
 
@@ -83,7 +85,9 @@ namespace BlackstarDemo
 
         private void CreateFloatingNote()
         {
+            _nearestStaveIndex = GetNearestStaveIndex();
             var targetY = GetYForNearestStaveLine();
+            var targetX = GetXForNextNote();
             _tempNote = new Image();
             
            var src = new BitmapImage();
@@ -94,37 +98,48 @@ namespace BlackstarDemo
             _tempNote.Source = src;
             _tempNote.Stretch = Stretch.Uniform;
             MainCanvas.Children.Add(_tempNote);
-            Canvas.SetLeft(_tempNote, _mousePosition.X - (src.PixelWidth /2));
+            Canvas.SetLeft(_tempNote, targetX - (src.PixelWidth /2));
             Canvas.SetTop(_tempNote, targetY - (src.PixelHeight / 2));
         }
 
         private double GetYForNearestStaveLine()
         {
+            return _staveLines[GetNearestStaveIndex()].Y1;
+        }
+
+        private int GetNearestStaveIndex()
+        {
             if (_mousePosition.Y <= _staveLines[0].Y1)
             {
-                return _staveLines[0].Y1;
-            } 
-            
-            if (_mousePosition.Y >= _staveLines[4].Y1)
-            {
-                return _staveLines[4].Y1;
+                return 0;
             }
 
-            var result = 0.0;
+            if (_mousePosition.Y >= _staveLines[4].Y1)
+            {
+                return 4;
+            }
+
+            var result = 0;
             for (var i = 0; i < 5; i++)
             {
                 if (_mousePosition.Y >= _staveLines[i].Y1 - (_staveLineSeparationDistance / 2) &&
                     _mousePosition.Y < _staveLines[i].Y1 + (_staveLineSeparationDistance / 2))
                 {
-                    result = _staveLines[i].Y1;
+                    result = i;
                 }
             }
             return result;
         }
 
+        private double GetXForNextNote()
+        {
+            return 50 + 25 + (50 * Notes.Count);
+        }
+
         private void UserControl_Drop(object sender, DragEventArgs e)
         {
             _tempNote = null;
+            Notes.Add(new Note {Frequency = _staveFrequencies[_nearestStaveIndex], Duration = TimeSpan.FromMilliseconds(500)});
             e.Handled = true;
         }
 
@@ -133,10 +148,13 @@ namespace BlackstarDemo
         private List<Line> _staveLines;
         private int _staveLineSeparationDistance = 26;
         private Image _tempNote;
-        
+        private int _nearestStaveIndex;
+        public List<Note> Notes { get; private set; }
 
-
-
-
+        private Dictionary<int, float> _staveFrequencies = new Dictionary<int, float>{
+            {0, Pitches.F4},
+            {1, Pitches.D4},
+            {2, Pitches.B3}
+        };
     }
 }
