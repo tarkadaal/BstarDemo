@@ -1,3 +1,10 @@
 ﻿Play notes that are <.5 sec long
 Fix clicking between notes
 Use pretty cursors for DragDrop operations
+Tidy everything up
+Change button click to using Commands
+MVVM
+Play all notes on stave
+Make pretty - add treble clef
+Clear stave
+Add rests

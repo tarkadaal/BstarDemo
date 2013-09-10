@@ -133,13 +133,13 @@ namespace BlackstarDemo
 
         private double GetXForNextNote()
         {
-            return 50 + 25 + (50 * Notes.Count);
+            return 50 + 25 + (25 * Notes.Count);
         }
 
         private void UserControl_Drop(object sender, DragEventArgs e)
         {
             _tempNote = null;
-            Notes.Add(new Note {Frequency = _staveFrequencies[_nearestStaveIndex], Duration = TimeSpan.FromMilliseconds(500)});
+            Notes.Add(new Note {Frequency = _staveFrequencies[_nearestStaveIndex], Duration = TimeSpan.FromMilliseconds(250)});
             e.Handled = true;
         }
 

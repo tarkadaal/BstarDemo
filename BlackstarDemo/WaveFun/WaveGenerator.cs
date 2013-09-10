@@ -85,10 +85,10 @@ namespace BlackstarDemo.WaveFun
             data = new WaveDataChunk();
 
             var milliseconds = notes.Select((x) => x.Duration.TotalMilliseconds).Sum();
-            var seconds = (uint)(milliseconds / 1000);
+            //var seconds = (uint)(milliseconds / 1000);
 
             // Number of samples = sample rate * channels * bytes per sample
-            uint numSamples = format.dwSamplesPerSec * format.wChannels * seconds;
+            uint numSamples = (uint)(((format.dwSamplesPerSec * milliseconds) / 1000) * format.wChannels);
 
             // Initialize the 16-bit array
             data.shortArray = new short[numSamples];
