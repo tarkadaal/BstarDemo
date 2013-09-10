@@ -88,6 +88,7 @@ namespace BlackstarDemo.WaveFun
             //var seconds = (uint)(milliseconds / 1000);
 
             // Number of samples = sample rate * channels * bytes per sample
+            // Multiply first, then divide to avoid rounding errors
             uint numSamples = (uint)(((format.dwSamplesPerSec * milliseconds) / 1000) * format.wChannels);
 
             // Initialize the 16-bit array
@@ -95,7 +96,7 @@ namespace BlackstarDemo.WaveFun
 
             int amplitude = 32760;  // Max amplitude for 16-bit audio
 
-            var sampleCount = 0;
+            uint sampleCount = 0;
 
             foreach (var n in notes)
             {
@@ -105,15 +106,17 @@ namespace BlackstarDemo.WaveFun
 
                 var samplesThisNote = format.dwSamplesPerSec * format.wChannels * n.Duration.TotalSeconds;
 
-                for (uint i = 0; i < samplesThisNote - 1; i++)
+                // Loop over sampleCount rather than from 0, because you don't want to reset
+                // the sine wave for repeated notes of the same pitch
+                for (uint i = sampleCount; i < (samplesThisNote + sampleCount) - 1; i++)
                 {
                     // Fill with a simple sine wave at max amplitude
                     for (int channel = 0; channel < format.wChannels; channel++)
                     {
-                        data.shortArray[sampleCount + i + channel] = Convert.ToInt16(amplitude * Math.Sin(t * i));
+                        data.shortArray[i + channel] = Convert.ToInt16(amplitude * Math.Sin(t * i));
                     }
                 }
-                sampleCount += (int)samplesThisNote;
+                sampleCount += (uint)samplesThisNote;
             }
             // Calculate data chunk size in bytes
             data.dwChunkSize = (uint)(data.shortArray.Length * (format.wBitsPerSample / 8));

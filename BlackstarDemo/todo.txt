@@ -1,10 +1,15 @@
-﻿Play notes that are <.5 sec long
-Fix clicking between notes
-Use pretty cursors for DragDrop operations
-Tidy everything up
-Change button click to using Commands
-MVVM
-Play all notes on stave
+﻿Play notes that are <.5 sec long -- DONE
+Use pretty cursors for DragDrop operations -- No longer required
+Play all notes on stave -- DONE
+
+
+Adjust scale an octave up so it really is treble
 Make pretty - add treble clef
+Fix clicking between notes
+Change button click to using Commands
+Tidy everything up
+MVVM
+Play "in-between" notes
+Play sharps/flats
 Clear stave
 Add rests

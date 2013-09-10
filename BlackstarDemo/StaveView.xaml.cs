@@ -48,8 +48,7 @@ namespace BlackstarDemo
         private void UserControl_PreviewDragEnter(object sender, DragEventArgs e)
         {
             _mousePosition = e.GetPosition(MainCanvas);
-            //RemoveDragLine();
-            //CreateDragLine();
+
             RemoveFloatingNote();
             CreateFloatingNote();
             e.Handled = true;
@@ -154,7 +153,9 @@ namespace BlackstarDemo
         private Dictionary<int, float> _staveFrequencies = new Dictionary<int, float>{
             {0, Pitches.F4},
             {1, Pitches.D4},
-            {2, Pitches.B3}
+            {2, Pitches.B3},
+            {3, Pitches.G3},
+            {4, Pitches.E3}
         };
     }
 }

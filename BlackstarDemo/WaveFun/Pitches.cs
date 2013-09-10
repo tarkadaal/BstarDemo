@@ -7,6 +7,8 @@ namespace BlackstarDemo.WaveFun
 {
     public static class Pitches
     {
+        public const float E3 = 164.81f;
+        public const float G3 = 196.0f;
         public const float A3 = 220.0f;
         public const float Bb3 = 233.08f;
         public const float B3 = 246.94f;
