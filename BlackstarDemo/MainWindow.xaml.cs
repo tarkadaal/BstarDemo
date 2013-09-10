@@ -24,18 +24,16 @@ namespace BlackstarDemo
         public MainWindow()
         {
             InitializeComponent();
-
-            PlayNotes();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            PlayNotes();
+            //PlayNotes();
         }
 
         private static void PlayNotes()
         {
-            string filePath = @"C:\Users\DanAdmin\Desktop\test2.wav";
+            string filePath = @"C:\Users\DanAdmin\Desktop\test.wav";
 
             var notes = new List<Note> { 
                 new Note{Frequency = Pitches.C4, Duration = TimeSpan.FromSeconds(.5)},
@@ -54,5 +52,37 @@ namespace BlackstarDemo
             SoundPlayer player = new SoundPlayer(filePath);
             player.Play();
         }
+
+        private void Image_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            _startPoint = e.GetPosition(null);
+
+        }
+
+        private void Image_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed && !_isDragging)
+            {
+                Point position = e.GetPosition(null);
+
+                if (Math.Abs(position.X - _startPoint.X) > SystemParameters.MinimumHorizontalDragDistance ||
+                    Math.Abs(position.Y - _startPoint.Y) > SystemParameters.MinimumVerticalDragDistance)
+                {
+                    StartDrag((DependencyObject)sender, e);
+
+                }
+            }   
+        }
+
+        private void StartDrag(DependencyObject sender, MouseEventArgs e)
+        {
+            _isDragging = true;
+            DataObject data = new DataObject(System.Windows.DataFormats.Text.ToString(), "abcd");
+            DragDropEffects de = DragDrop.DoDragDrop(sender, data, DragDropEffects.Move);
+            _isDragging = false;
+        }
+
+        private bool _isDragging;
+        private Point _startPoint;
     }
 }

@@ -1,0 +1,3 @@
+﻿Play notes that are <.5 sec long
+Fix clicking between notes
+Use pretty cursors for DragDrop operations

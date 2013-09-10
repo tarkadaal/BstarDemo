@@ -1,9 +1,21 @@
 ﻿<Window x:Class="BlackstarDemo.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:BlackstarDemo="clr-namespace:BlackstarDemo"
         Title="MainWindow" Height="350" Width="525"
         Loaded="Window_Loaded">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Button>Play</Button>
+            <Image Source="Images\quarterNote.png" PreviewMouseLeftButtonDown="Image_PreviewMouseLeftButtonDown" PreviewMouseMove="Image_PreviewMouseMove"/>
+            <Image Source="Images\quarterRest.png"/>
+        </StackPanel>
+        <BlackstarDemo:StaveView Grid.Row="1">
+
+        </BlackstarDemo:StaveView>
     </Grid>
 </Window>

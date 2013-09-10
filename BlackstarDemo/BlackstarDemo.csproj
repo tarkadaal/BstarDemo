@@ -55,6 +55,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="StaveView.xaml.cs">
+      <DependentUpon>StaveView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WaveFun\Note.cs" />
     <Compile Include="WaveFun\Pitches.cs" />
     <Compile Include="WaveFun\WaveGenerator.cs" />
@@ -71,6 +74,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="StaveView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -95,6 +102,13 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="todo.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\quarterNote.png" />
+    <Resource Include="Images\quarterRest.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
