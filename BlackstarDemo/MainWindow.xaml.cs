@@ -13,6 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using BlackstarDemo.WaveFun;
 using System.Media;
+using System.IO;
 
 namespace BlackstarDemo
 {
@@ -24,27 +25,6 @@ namespace BlackstarDemo
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            //PlayNotes();
-        }
-
-        private static void PlayNotes()
-        {
-            var notes = new List<Note> { 
-                new Note{Frequency = Pitches.C4, Duration = TimeSpan.FromSeconds(.5)},
-                new Note{Frequency = Pitches.D4, Duration = TimeSpan.FromSeconds(.5)},
-                new Note{Frequency = Pitches.E4, Duration = TimeSpan.FromSeconds(.5)},
-                new Note{Frequency = Pitches.F4, Duration = TimeSpan.FromSeconds(.5)},
-                new Note{Frequency = Pitches.G4, Duration = TimeSpan.FromSeconds(.5)},
-                new Note{Frequency = Pitches.A4, Duration = TimeSpan.FromSeconds(.5)},
-                new Note{Frequency = Pitches.B4, Duration = TimeSpan.FromSeconds(.5)},
-                new Note{Frequency = Pitches.C5, Duration = TimeSpan.FromSeconds(.5)}
-            };
-
-            PlayNotes(notes);
         }
 
         private void Image_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -69,7 +49,7 @@ namespace BlackstarDemo
         private void StartDrag(DependencyObject sender, MouseEventArgs e)
         {
             _isDragging = true;
-            DataObject data = new DataObject(System.Windows.DataFormats.Text.ToString(), "abcd");
+            DataObject data = new DataObject(System.Windows.DataFormats.Text.ToString(), "note");
             DragDropEffects de = DragDrop.DoDragDrop(sender, data, DragDropEffects.Move);
             _isDragging = false;
         }
@@ -81,15 +61,16 @@ namespace BlackstarDemo
 
         private static void PlayNotes(List<Note> notes)
         {
-            string filePath = @"C:\Users\DanAdmin\Desktop\test.wav";
+            using (var stream = new MemoryStream())
+            {
+                WaveGenerator wave = new WaveGenerator(notes);
+                wave.Save(stream);
 
-            WaveGenerator wave = new WaveGenerator(notes);
-            wave.Save(filePath);
-
-            SoundPlayer player = new SoundPlayer(filePath);
-            player.Play();
+                stream.Seek(0, SeekOrigin.Begin);
+                SoundPlayer player = new SoundPlayer(stream);
+                player.Play();
+            }
         }
-
 
         private bool _isDragging;
         private Point _startPoint;

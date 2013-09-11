@@ -24,14 +24,15 @@ namespace BlackstarDemo
         public StaveView()
         {
             InitializeComponent();
-            Notes = new List<Note>();
+            _model = new StaveModel();
         }
 
+        public List<Note> Notes { get { return _model.Notes; } }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             _staveLines = new List<Line>();
-            for (var i = 0; i < 5; i++)
+            for (var i = 0; i < _model.Staves.Count; i++)
             {
                 var l = new Line
                 {
@@ -54,31 +55,11 @@ namespace BlackstarDemo
             e.Handled = true;
         }
 
-        private void CreateDragLine()
-        {
-            _dragLineHorizontal = new Line
-            {
-                X1 = 0,
-                X2 = MainCanvas.ActualWidth,
-                Y1 = _mousePosition.Y,
-                Y2 = _mousePosition.Y
-            };
-            MainCanvas.Children.Add(_dragLineHorizontal);
-        }
-
-        private void RemoveDragLine()
-        {
-            if (_dragLineHorizontal != null)
-            {
-                MainCanvas.Children.Remove(_dragLineHorizontal);
-            }
-        }
-
         private void RemoveFloatingNote()
         {
-            if (_tempNote != null)
+            if (_noteImage != null)
             {
-                MainCanvas.Children.Remove(_tempNote);
+                MainCanvas.Children.Remove(_noteImage);
             }
         }
 
@@ -87,18 +68,18 @@ namespace BlackstarDemo
             _nearestStaveIndex = GetNearestStaveIndex();
             var targetY = GetYForNearestStaveLine();
             var targetX = GetXForNextNote();
-            _tempNote = new Image();
-            
-           var src = new BitmapImage();
+            _noteImage = new Image();
+
+            var src = new BitmapImage();
             src.BeginInit();
             src.UriSource = new Uri(@"pack://application:,,,/Images/quarterNote.png");
             src.CacheOption = BitmapCacheOption.OnLoad;
             src.EndInit();
-            _tempNote.Source = src;
-            _tempNote.Stretch = Stretch.Uniform;
-            MainCanvas.Children.Add(_tempNote);
-            Canvas.SetLeft(_tempNote, targetX - (src.PixelWidth /2));
-            Canvas.SetTop(_tempNote, targetY - (src.PixelHeight / 2));
+            _noteImage.Source = src;
+            _noteImage.Stretch = Stretch.Uniform;
+            MainCanvas.Children.Add(_noteImage);
+            Canvas.SetLeft(_noteImage, targetX - (src.PixelWidth / 2));
+            Canvas.SetTop(_noteImage, targetY - (src.PixelHeight / 2));
         }
 
         private double GetYForNearestStaveLine()
@@ -113,13 +94,13 @@ namespace BlackstarDemo
                 return 0;
             }
 
-            if (_mousePosition.Y >= _staveLines[4].Y1)
+            if (_mousePosition.Y >= _staveLines[_staveLines.Count - 1].Y1)
             {
-                return 4;
+                return _staveLines.Count - 1;
             }
 
             var result = 0;
-            for (var i = 0; i < 5; i++)
+            for (var i = 0; i < _staveLines.Count - 1; i++)
             {
                 if (_mousePosition.Y >= _staveLines[i].Y1 - (_staveLineSeparationDistance / 2) &&
                     _mousePosition.Y < _staveLines[i].Y1 + (_staveLineSeparationDistance / 2))
@@ -132,30 +113,24 @@ namespace BlackstarDemo
 
         private double GetXForNextNote()
         {
-            return 50 + 25 + (25 * Notes.Count);
+            return 50 + 25 + (25 * _model.Notes.Count);
         }
 
         private void UserControl_Drop(object sender, DragEventArgs e)
         {
-            _tempNote = null;
-            Notes.Add(new Note {Frequency = _staveFrequencies[_nearestStaveIndex], Duration = TimeSpan.FromMilliseconds(250)});
+            _noteImage = null;
+            _model.AddNoteToStave(_nearestStaveIndex);
             e.Handled = true;
         }
 
-        private Line _dragLineHorizontal;
+
+
         private Point _mousePosition;
         private List<Line> _staveLines;
         private int _staveLineSeparationDistance = 26;
-        private Image _tempNote;
+        private Image _noteImage;
         private int _nearestStaveIndex;
-        public List<Note> Notes { get; private set; }
 
-        private Dictionary<int, float> _staveFrequencies = new Dictionary<int, float>{
-            {0, Pitches.F4},
-            {1, Pitches.D4},
-            {2, Pitches.B3},
-            {3, Pitches.G3},
-            {4, Pitches.E3}
-        };
+        private StaveModel _model;
     }
 }

@@ -2,13 +2,12 @@
 Use pretty cursors for DragDrop operations -- No longer required
 Play all notes on stave -- DONE
 
-
-Adjust scale an octave up so it really is treble
-Make pretty - add treble clef
-Fix clicking between notes
 Change button click to using Commands
 Tidy everything up
 MVVM
+Adjust scale an octave up so it really is treble
+Make pretty - add treble clef
+Fix clicking between notes
 Play "in-between" notes
 Play sharps/flats
 Clear stave
