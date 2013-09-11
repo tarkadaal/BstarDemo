@@ -8,6 +8,8 @@
 // with no endorsement from Microsoft.
 //-----------------------------------------------------
 
+// Amended by Dan Jackson
+
 using System;
 using System.IO;
 using System.Collections.Generic;

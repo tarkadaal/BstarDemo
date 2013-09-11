@@ -11,7 +11,7 @@
         <StackPanel Grid.Row="0" Orientation="Horizontal">
             <Button Click="Button_Click">Play</Button>
             <Image Source="Images\quarterNote.png" PreviewMouseLeftButtonDown="Image_PreviewMouseLeftButtonDown" PreviewMouseMove="Image_PreviewMouseMove"/>
-            <Image Source="Images\quarterRest.png"/>
+            <Image Source="Images\quarterRest.png" Visibility="Collapsed"/>
         </StackPanel>
         <BlackstarDemo:StaveView x:Name="Stave" Grid.Row="1">
 

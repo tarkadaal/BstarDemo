@@ -60,7 +60,6 @@
     <Compile Include="StaveView.xaml.cs">
       <DependentUpon>StaveView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="StaveViewModel.cs" />
     <Compile Include="WaveFun\Note.cs" />
     <Compile Include="WaveFun\Pitches.cs" />
     <Compile Include="WaveFun\WaveGenerator.cs" />
